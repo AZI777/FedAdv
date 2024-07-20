@@ -1,5 +1,6 @@
 import numpy as np
 
+np.random.seed(0)
 
 def split_non_iid_dataset(labels, index, alpha, n_clients):
     # labels是整个数据集的labels

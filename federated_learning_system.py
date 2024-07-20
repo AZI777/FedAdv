@@ -21,13 +21,13 @@ def train(model, dataloader, epochs):
     n_input = 0
     correct = 0
     for _ in range(epochs):
-        for input, target in dataloader:
-            n_input += len(input)
-            input, target = input.to(device), target.to(device)
-            output = model(input)
+        for data, target in dataloader:
+            n_input += len(data)
+            data, target = data.to(device), target.to(device)
+            output = model(data)
             output = output.to(device)
             loss = criterion(output, target).to(device)
-            train_loss += loss.item() * len(input)
+            train_loss += loss.item() * len(data)
             pred = output.argmax(dim=1)
             correct += torch.sum(pred == target).item()
             optimizer.zero_grad()
@@ -44,13 +44,13 @@ def evaluate(model, dataloader):
     n_input = 0
     evaluate_loss = 0.
     with torch.no_grad():
-        for input, target in dataloader:
-            n_input += len(input)
-            input, target = input.to(device), target.to(device)
-            output = model(input)
+        for data, target in dataloader:
+            n_input += len(data)
+            data, target = data.to(device), target.to(device)
+            output = model(data)
             output = output.to(device)
             loss = criterion(output, target).to(device)
-            evaluate_loss += loss.item() * len(input)
+            evaluate_loss += loss.item() * len(data)
             pred = output.argmax(dim=1)
             correct += torch.sum(pred == target).item()
     average_loss = evaluate_loss / n_input
@@ -62,6 +62,19 @@ class Fl_Model(object):
     def __init__(self, model):
         super(Fl_Model, self).__init__()
         self.model = model.to(device)
+        self.weight = [name for name, _ in self.model.state_dict().items()]
+
+    def equal_weight(self, other):
+        for name in self.weight:
+            if not torch.equal(self.model.state_dict()[name], other.model.state_dict()[name]):
+                return False
+        return True
+
+    def f(self, other):
+        loss = 0
+        for name in self.weight:
+            loss += torch.sum(self.model.state_dict()[name] - other.model.state_dict()[name]).item()
+        return loss
 
 
 class Client(Fl_Model):
@@ -70,10 +83,12 @@ class Client(Fl_Model):
         self.server = server
         self.datasize = len(dataset)
         self.epochs = epochs
-        self.dataloader = DataLoader(dataset, batch_size=batch_size, drop_last=True)
+        self.dataloader = DataLoader(dataset, batch_size=batch_size, drop_last=True,shuffle=True)
 
     def synchronize_from_server(self):
         self.model.load_state_dict(self.server.model.state_dict())
+        if not self.equal_weight(self.server):
+            raise Exception("failed to synchronize from server")
 
     def train(self):
         average_loss, average_correct = train(self.model, self.dataloader, self.epochs)
@@ -113,18 +128,22 @@ class Server(Fl_Model):
     def aggregate(self):
         total_datasize = 0
         selected_clients = [self.clients[index] for index in self.selected_index]
+        print('selected_index:')
+        print(self.selected_index)
         for client in selected_clients:
             total_datasize += client.datasize
 
         name_list = [key for key, _ in self.model.state_dict().items()]
         init_state_dict = {}
         for name in name_list:
-            weight = torch.zeros_like(self.clients[self.selected_index[0]].model.state_dict()[name])
+            weight = torch.zeros_like(self.clients[self.selected_index[0]].model.state_dict()[name], dtype=torch.float)
             for client in selected_clients:
-                weight.add_(client.model.state_dict()[name])
-            weight = weight / len(selected_clients)
+                ratio = client.datasize / total_datasize
+                weight.add_(client.model.state_dict()[name].float() * ratio)
             init_state_dict[name] = weight
         self.model.load_state_dict(init_state_dict)
+        print("difference between client and server:")
+        print(self.clients[0].f(self))
 
     def train(self):
         self.synchronize()
