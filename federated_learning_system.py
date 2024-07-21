@@ -9,7 +9,7 @@ device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
 BATCH_SIZE = 4096
 EPOCHS = 1
-n_clients = 1
+n_clients = 10
 fraction_client = 0.5
 ALPHA = 1.0
 
@@ -128,8 +128,6 @@ class Server(Fl_Model):
     def aggregate(self):
         total_datasize = 0
         selected_clients = [self.clients[index] for index in self.selected_index]
-        print('selected_index:')
-        print(self.selected_index)
         for client in selected_clients:
             total_datasize += client.datasize
 
@@ -142,8 +140,6 @@ class Server(Fl_Model):
                 weight.add_(client.model.state_dict()[name].float() * ratio)
             init_state_dict[name] = weight
         self.model.load_state_dict(init_state_dict)
-        print("difference between client and server:")
-        print(self.clients[0].f(self))
 
     def train(self):
         self.synchronize()
