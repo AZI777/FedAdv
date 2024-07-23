@@ -1155,6 +1155,46 @@ Train_loss: 1.4318   Train_accuracy: 59.5384%
 Evaluate_loss: 1.2887   Evaluate_accuracy: 62.9429%
 
 Round: 301
+Train_loss: 1.4275   Train_accuracy: 59.6643%
+Evaluate_loss: 1.2872   Evaluate_accuracy: 62.9691%
+
+Round: 302
+Train_loss: 1.4283   Train_accuracy: 59.5373%
+Evaluate_loss: 1.2852   Evaluate_accuracy: 63.0205%
+
+Round: 303
+Train_loss: 1.4249   Train_accuracy: 59.6657%
+Evaluate_loss: 1.2841   Evaluate_accuracy: 63.0371%
+
+Round: 304
+Train_loss: 1.4242   Train_accuracy: 59.7634%
+Evaluate_loss: 1.2841   Evaluate_accuracy: 63.0362%
+
+Round: 305
+Train_loss: 1.4215   Train_accuracy: 59.7699%
+Evaluate_loss: 1.2829   Evaluate_accuracy: 63.0572%
+
+Round: 306
+Train_loss: 1.4203   Train_accuracy: 59.7709%
+Evaluate_loss: 1.2809   Evaluate_accuracy: 63.0981%
+
+Round: 301
+Train_loss: 1.4272   Train_accuracy: 59.7189%
+Evaluate_loss: 1.2878   Evaluate_accuracy: 62.9778%
+
+Round: 302
+Train_loss: 1.4269   Train_accuracy: 59.6047%
+Evaluate_loss: 1.2855   Evaluate_accuracy: 63.0014%
+
+Round: 303
+Train_loss: 1.4248   Train_accuracy: 59.6943%
+Evaluate_loss: 1.2851   Evaluate_accuracy: 63.0240%
+
+Round: 304
+Train_loss: 1.4244   Train_accuracy: 59.6996%
+Evaluate_loss: 1.2831   Evaluate_accuracy: 63.0711%
+
+Round: 301
 Train_loss: 1.4284   Train_accuracy: 59.6164%
 Evaluate_loss: 1.2873   Evaluate_accuracy: 62.9761%
 
@@ -2009,4 +2049,92 @@ Evaluate_loss: 1.0830   Evaluate_accuracy: 67.2913%
 Round: 514
 Train_loss: 1.2053   Train_accuracy: 64.2052%
 Evaluate_loss: 1.0832   Evaluate_accuracy: 67.2791%
+
+Round: 515
+Train_loss: 1.2042   Train_accuracy: 64.3022%
+Evaluate_loss: 1.0834   Evaluate_accuracy: 67.2747%
+
+Round: 516
+Train_loss: 1.2044   Train_accuracy: 64.2832%
+Evaluate_loss: 1.0818   Evaluate_accuracy: 67.3174%
+
+Round: 517
+Train_loss: 1.2030   Train_accuracy: 64.2779%
+Evaluate_loss: 1.0820   Evaluate_accuracy: 67.3087%
+
+Round: 518
+Train_loss: 1.2020   Train_accuracy: 64.3455%
+Evaluate_loss: 1.0808   Evaluate_accuracy: 67.3383%
+
+Round: 519
+Train_loss: 1.2029   Train_accuracy: 64.2721%
+Evaluate_loss: 1.0809   Evaluate_accuracy: 67.3104%
+
+Round: 520
+Train_loss: 1.2007   Train_accuracy: 64.3791%
+Evaluate_loss: 1.0803   Evaluate_accuracy: 67.3453%
+
+Round: 521
+Train_loss: 1.2009   Train_accuracy: 64.3691%
+Evaluate_loss: 1.0778   Evaluate_accuracy: 67.4308%
+
+Round: 522
+Train_loss: 1.1984   Train_accuracy: 64.3992%
+Evaluate_loss: 1.0779   Evaluate_accuracy: 67.4194%
+
+Round: 523
+Train_loss: 1.1993   Train_accuracy: 64.3217%
+Evaluate_loss: 1.0774   Evaluate_accuracy: 67.4264%
+
+Round: 524
+Train_loss: 1.2001   Train_accuracy: 64.3195%
+Evaluate_loss: 1.0767   Evaluate_accuracy: 67.4500%
+
+Round: 525
+Train_loss: 1.1976   Train_accuracy: 64.3871%
+Evaluate_loss: 1.0768   Evaluate_accuracy: 67.4308%
+
+Round: 526
+Train_loss: 1.1967   Train_accuracy: 64.4404%
+Evaluate_loss: 1.0754   Evaluate_accuracy: 67.4874%
+
+Round: 527
+Train_loss: 1.1960   Train_accuracy: 64.4831%
+Evaluate_loss: 1.0743   Evaluate_accuracy: 67.5328%
+
+Round: 528
+Train_loss: 1.1965   Train_accuracy: 64.4882%
+Evaluate_loss: 1.0749   Evaluate_accuracy: 67.4944%
+
+Round: 529
+Train_loss: 1.1951   Train_accuracy: 64.4709%
+Evaluate_loss: 1.0738   Evaluate_accuracy: 67.5223%
+
+Round: 530
+Train_loss: 1.1960   Train_accuracy: 64.4070%
+Evaluate_loss: 1.0727   Evaluate_accuracy: 67.5694%
+
+Round: 531
+Train_loss: 1.1947   Train_accuracy: 64.4664%
+Evaluate_loss: 1.0738   Evaluate_accuracy: 67.5206%
+
+Round: 532
+Train_loss: 1.1933   Train_accuracy: 64.4448%
+Evaluate_loss: 1.0725   Evaluate_accuracy: 67.5624%
+
+Round: 533
+Train_loss: 1.1917   Train_accuracy: 64.5711%
+Evaluate_loss: 1.0713   Evaluate_accuracy: 67.6060%
+
+Round: 534
+Train_loss: 1.1929   Train_accuracy: 64.4543%
+Evaluate_loss: 1.0715   Evaluate_accuracy: 67.5825%
+
+Round: 535
+Train_loss: 1.1914   Train_accuracy: 64.5258%
+Evaluate_loss: 1.0711   Evaluate_accuracy: 67.5764%
+
+Round: 536
+Train_loss: 1.1911   Train_accuracy: 64.5048%
+Evaluate_loss: 1.0697   Evaluate_accuracy: 67.6182%
 

@@ -1,0 +1,13 @@
+baseline存储了基准的模型；
+
+Data_utils存储了划分数据集和构建学习曲线的函数；
+
+federated_learning_system实现了Server和Client的构建
+
+model实现了模型结构
+
+learning_curves是学习曲线
+
+loss_acc中存储了学习过程的信息
+
+weight中存储了权重文件
