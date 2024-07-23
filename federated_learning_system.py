@@ -9,8 +9,8 @@ device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
 BATCH_SIZE = 4096
 EPOCHS = 1
-n_clients = 10
-fraction_client = 0.5
+n_clients = 5
+fraction_client = 1.0
 ALPHA = 1.0
 
 
@@ -64,17 +64,8 @@ class Fl_Model(object):
         self.model = model.to(device)
         self.weight = [name for name, _ in self.model.state_dict().items()]
 
-    def equal_weight(self, other):
-        for name in self.weight:
-            if not torch.equal(self.model.state_dict()[name], other.model.state_dict()[name]):
-                return False
-        return True
-
-    def f(self, other):
-        loss = 0
-        for name in self.weight:
-            loss += torch.sum(self.model.state_dict()[name] - other.model.state_dict()[name]).item()
-        return loss
+    def load_weight(self, epoch):
+        self.model.load_state_dict(torch.load('model_epoch_' + str(epoch)+".pth"))
 
 
 class Client(Fl_Model):
@@ -83,12 +74,10 @@ class Client(Fl_Model):
         self.server = server
         self.datasize = len(dataset)
         self.epochs = epochs
-        self.dataloader = DataLoader(dataset, batch_size=batch_size, drop_last=True,shuffle=True)
+        self.dataloader = DataLoader(dataset, batch_size=batch_size, drop_last=True, shuffle=True)
 
     def synchronize_from_server(self):
         self.model.load_state_dict(self.server.model.state_dict())
-        if not self.equal_weight(self.server):
-            raise Exception("failed to synchronize from server")
 
     def train(self):
         average_loss, average_correct = train(self.model, self.dataloader, self.epochs)
@@ -152,31 +141,30 @@ class Server(Fl_Model):
         loss, accuracy = evaluate(self.model, dataloader)
         return loss, accuracy
 
-    def run(self):
-        train_loss_list, train_accuracy_list, evaluate_loss_list, evaluate_accuracy_list = [], [], [], []
-        for i in range(self.n_rounds):
+    def run(self, train_loss_list, train_accuracy_list, evaluate_loss_list, evaluate_accuracy_list, start=1):
+        if start >= 10:
+            start = start - start % 10
+            self.load_weight(start)
+        else:
+            start = 0
+
+        for i in range(start + 1, self.n_rounds + 1):
             train_loss, train_accuracy = self.train()
             evaluate_loss, evaluate_accuracy = self.evaluate()
             train_loss_list.append(train_loss)
             train_accuracy_list.append(train_accuracy)
             evaluate_loss_list.append(evaluate_loss)
             evaluate_accuracy_list.append(evaluate_accuracy)
-            print("Round: {}".format(i + 1))
+
+            if i % 10 == 0:
+                torch.save(self.model.state_dict(), f'model_epoch_{i}.pth')
+
+            print("Round: {}".format(i))
             print(f"Train_loss: {train_loss:.4f}   Train_accuracy: {(100. * train_accuracy):.4f}%")
             print(f"Evaluate_loss: {evaluate_loss:.4f}   Evaluate_accuracy: {(100. * evaluate_accuracy):.4f}%")
             print("")
-
-        r = range(1, self.n_rounds + 1)
-        plt.figure(figsize=(20, 4))
-        fig, (ax0, ax1) = plt.subplots(2, 1, sharex=True, constrained_layout=True)
-        ax0.plot(r, train_loss_list, label="train")
-        ax0.plot(r, evaluate_loss_list, label="evaluate")
-        ax0.legend(loc="upper right")
-        ax0.set_ylabel('Loss')
-        ax1.plot(r, train_accuracy_list, label="train")
-        ax1.plot(r, evaluate_accuracy_list, label="evaluate")
-        ax1.legend(loc="upper right")
-        ax1.set_ylabel('Accuracy')
-        ax1.set_xlabel('Round')
-        ax1.set_xticks(r, labels=r)
-        plt.show()
+            with open('loss_acc.log', mode='a') as f:
+                f.write("Round: {}\n".format(i))
+                f.write(f"Train_loss: {train_loss:.4f}   Train_accuracy: {(100. * train_accuracy):.4f}%\n")
+                f.write(f"Evaluate_loss: {evaluate_loss:.4f}   Evaluate_accuracy: {(100. * evaluate_accuracy):.4f}%\n")
+                f.write("\n")
